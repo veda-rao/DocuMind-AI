@@ -4,6 +4,7 @@ from vector_store import (
     create_vector_store,
     load_vector_store,
     vector_store_exists,
+    get_retriever,
 )
 from vector_store import create_vector_store
 from embeddings import get_embedding_model
@@ -60,3 +61,20 @@ else:
     )
 
 print("\nDocuMind AI is ready!")
+
+retriever = get_retriever(vector_store)
+print("Retriever initialized successfully!")
+
+# Testing:
+question = "What is Multi-Head Attention?"
+print(f"\nQuestion: {question}\n")
+
+results = retriever.invoke(question)
+print(f"Retrieved {len(results)} chunk(s):\n")
+
+for index, document in enumerate(results, start=1):
+    print(f"Chunk {index}")
+    print("-" * 60)
+    print(document.page_content[:500])
+    print(f"\nMetadata: {document.metadata}")
+    print("=" * 60)

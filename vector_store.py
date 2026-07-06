@@ -39,3 +39,19 @@ def load_vector_store(embedding_model):
         persist_directory=str(CHROMA_DB_DIR),
         embedding_function=embedding_model
     )
+
+def get_retriever(vector_store, k: int = 4):
+    """
+    Create a retriever from the vector store.
+
+    Args:
+        vector_store: Chroma vector database
+        k: Number of document chunks to retrieve.
+
+    Returns:
+        LangChain retriever.
+    """
+
+    return vector_store.as_retriever(
+        search_kwargs={"k": k}
+    )
