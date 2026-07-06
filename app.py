@@ -1,5 +1,10 @@
 # Main program
 
+from vector_store import (
+    create_vector_store,
+    load_vector_store,
+    vector_store_exists,
+)
 from vector_store import create_vector_store
 from embeddings import get_embedding_model
 from splitter import split_documents
@@ -35,10 +40,23 @@ for pdf in pdf_files:
 
 print(f"\nTotal Chunks: {len(all_chunks)}")
 
-vector_store = create_vector_store(
-    all_chunks,
-    embedding_model
-)
+if vector_store_exists():
 
-print("\nVector store created successfully.")
-print("Embeddings generated and stored in ChromaDB.")
+    print("\nExisting vector store found.")
+    print("Loading ChromaDB...")
+
+    vector_store = load_vector_store(
+        embedding_model
+    )
+
+else:
+
+    print("\nNo vector store found.")
+    print("Creating a new vector store...")
+
+    vector_store = create_vector_store(
+        all_chunks,
+        embedding_model
+    )
+
+print("\nDocuMind AI is ready!")

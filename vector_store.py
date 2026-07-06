@@ -1,19 +1,33 @@
+from pathlib import Path
+
 from langchain_chroma import Chroma
 
 from config import CHROMA_DB_DIR
+
+
+def vector_store_exists() -> bool:
+    """
+    Check if a persisted Chroma database already exists.
+    """
+
+    db_path = Path(CHROMA_DB_DIR)
+
+    return (
+        db_path.exists()
+        and (db_path / "chroma.sqlite3").exists()
+    )
+
 
 def create_vector_store(chunks, embedding_model):
     """
     Create and persist a Chroma vector database.
     """
 
-    vector_store = Chroma.from_documents(
+    return Chroma.from_documents(
         documents=chunks,
         embedding=embedding_model,
-        persist_directory=CHROMA_DB_DIR
+        persist_directory=str(CHROMA_DB_DIR)
     )
-
-    return vector_store
 
 
 def load_vector_store(embedding_model):
@@ -22,6 +36,6 @@ def load_vector_store(embedding_model):
     """
 
     return Chroma(
-        persist_directory=CHROMA_DB_DIR,
+        persist_directory=str(CHROMA_DB_DIR),
         embedding_function=embedding_model
     )
