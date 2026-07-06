@@ -1,11 +1,17 @@
 # Main program
-from loader import load_pdf
+
+from embeddings import get_embedding_model
 from splitter import split_documents
+from loader import load_pdf
 from utils import get_pdf_files
 
 PDF_FOLDER = "documents/research_papers"
 
 pdf_files = get_pdf_files(PDF_FOLDER)
+
+embedding_model = get_embedding_model()
+
+print("Embedding Model Loaded Successfully!\n")
 
 for pdf in pdf_files:
 
@@ -13,18 +19,8 @@ for pdf in pdf_files:
 
     chunks = split_documents(documents)
 
-    print(f"\n{pdf.name}")
-
+    print(f"{pdf.name}")
     print(f"Pages  : {len(documents)}")
-
     print(f"Chunks : {len(chunks)}")
 
-    print("\nFirst Chunk:\n")
-
-    print(chunks[0].page_content)
-
-    print("\nMetadata:")
-
-    print(chunks[0].metadata)
-
-    print("-" * 70)
+    print("-" * 60)
