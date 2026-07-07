@@ -1,10 +1,9 @@
 # Main program
 
+from rag import answer_question
 from config import DOCUMENTS_DIR
 from embeddings import get_embedding_model
-from llm import generate_response
 from loader import load_pdf
-from prompts import RAG_PROMPT
 from splitter import split_documents
 from utils import get_pdf_files
 from vector_store import (
@@ -63,30 +62,22 @@ def ask_question(retriever):
 
     while True:
 
-        question = input("\nAsk a question (type 'exit' to quit): ")
+        question = input("\nAsk a question (type 'exit' to quit): ").strip()
 
         if question.lower() == "exit":
             print("\nGoodbye!")
             break
 
-        documents = retriever.invoke(question)
-
-        context = "\n\n".join(
-            doc.page_content
-            for doc in documents
+        answer = answer_question(
+            question,
+            retriever
         )
-
-        prompt = RAG_PROMPT.format(
-            context=context,
-            question=question,
-        )
-
-        answer = generate_response(prompt)
 
         print("\n" + "=" * 80)
         print("Answer:\n")
         print(answer)
         print("=" * 80)
+    
 
 
 def main():
